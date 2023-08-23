@@ -2,6 +2,6 @@
 Pong Made in openGL
 
 to run:
-    ```shell
+    ```bash
     make
     ```
