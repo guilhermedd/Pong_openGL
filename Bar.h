@@ -7,6 +7,7 @@ struct Bar
     float w;
     float h;
     float speed;
+    int points;
 };
 
 void drawBar(struct Bar *bar);

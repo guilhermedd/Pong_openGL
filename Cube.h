@@ -10,3 +10,4 @@ struct Cube
 };
 
 void drawCube(struct Cube *cube);
+void updateCube(struct Cube *cube);

@@ -12,3 +12,9 @@ void drawCube(struct Cube *cube) {
 
     glEnd();
 }
+
+void updateCube(struct Cube *cube)
+{
+    cube->x += cube->speed_x;
+    cube->y += cube->speed_y;
+}
