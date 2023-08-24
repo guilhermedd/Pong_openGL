@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.html.erb": "html",
+        "bar.h": "c"
+    }
+}
