@@ -11,10 +11,43 @@
 #define WIDTH 1200
 #define HEIGHT 800
 #define pi 3.142857
-struct Cube cube = {WIDTH / 2, HEIGHT / 2, 30, 0.1, 0.1}; // x, y, size, speed_x, speed_y
+
+#define BAR_HEIGHT 300
+#define BAR_Y (HEIGHT / 2) - (BAR_HEIGHT / 2)
+#define BAR_SPEED 0
+#define BAR_WIDTH 15
+#define BAR_X 30
+
+struct Bar left = {BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, BAR_SPEED, 0, 0};
+struct Bar right = {WIDTH - BAR_X - BAR_WIDTH, BAR_Y, BAR_WIDTH, BAR_HEIGHT, BAR_SPEED, 0, 0};
+struct Cube cube = {WIDTH / 2, HEIGHT / 2, 30, 0.0, 0.0, 0}; // x, y, size, speed_x, speed_y, isMoving
 
 void timerCallback(int value);
 void update(struct Cube *cube);
+
+void keyboard(unsigned char key, int x, int y)
+{
+    const float cameraSpeed = 0.1f;
+
+    switch (key)
+    {
+        case ' ':
+            if (cube.isMoving)
+                break;
+            if (!cube.isMoving && left.last_winner){
+                cube.isMoving = 1;
+                cube.speed_x = 0.05;
+                cube.speed_y = 0.1;
+            } else {
+                cube.isMoving = 1;
+                cube.speed_x = -0.05;
+                cube.speed_y = 0.1;
+            }
+                break;
+    }
+
+    glutPostRedisplay();
+}
 
 void timerCallback(int value)
 {
@@ -58,34 +91,40 @@ void myInit(void)
 
 void update(struct Cube *cube)
 {
-    updateCube(cube);                 // Update ball position
+    updateCube(cube, HEIGHT, WIDTH);                 // Update ball position
     // Call update again after 16 ms (approximately 60 fps)
 }
 
 void display(void)
 {
+
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawText(WIDTH / 2 - 35, 50, "- PONG - ", 500);
 
     drawCube(&cube);
 
-    float height = 300, y = (HEIGHT / 2) - (height / 2), speed = 0, width = 15, x = 30;
-
-    struct Bar left = {x, y, width, height, speed, 0};
     drawBar(&left);
 
-    struct Bar right = {WIDTH - x - width, y, width, height, speed, 0};
     drawBar(&right);
 
+
+    if (cube.x <= 0)
+        make_point(&left, &right);
+    else if (cube.x >= WIDTH)
+        make_point(&right, &left);
     update(&cube);   // Update the cube's position
     drawCube(&cube); // Draw the cube with the updated position
+
+    // printf("Pontos direita: %i | Pontos esquerda: %i\n", right.points, left.points);
+
+    char left_points[20];
+    sprintf(left_points, "%d", left.points);
 
     char right_points[20];
     sprintf(right_points, "%d", right.points);
 
-    char left_points[20];
-    sprintf(left_points, "%d", left.points);
+
     drawText(WIDTH / 2 - 70, 50, right_points, 500);
     drawText(WIDTH / 2 + 95, 50, left_points, 500);
 
@@ -108,5 +147,6 @@ int main(int argc, char **argv)
     myInit();
 
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
 }

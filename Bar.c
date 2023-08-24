@@ -13,3 +13,9 @@ void drawBar(struct Bar *bar)
 
     glEnd();
 }
+
+void make_point(struct Bar *this, struct Bar *other) {
+    this->points++;
+    this->last_winner = 1;
+    other->last_winner = 0;
+}
