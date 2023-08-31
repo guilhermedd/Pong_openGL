@@ -31,19 +31,42 @@ void keyboard(unsigned char key, int x, int y)
 
     switch (key)
     {
-        case ' ':
-            if (cube.isMoving)
-                break;
-            if (!cube.isMoving && left.last_winner){
-                cube.isMoving = 1;
-                cube.speed_x = 0.05;
-                cube.speed_y = 0.1;
-            } else {
-                cube.isMoving = 1;
-                cube.speed_x = -0.05;
-                cube.speed_y = 0.1;
-            }
-                break;
+    case ' ':
+        if (cube.isMoving)
+            break;
+        if (!cube.isMoving && left.last_winner)
+        {
+            cube.isMoving = 1;
+            cube.speed_x = 0.05;
+            cube.speed_y = 0.1;
+        }
+        else
+        {
+            cube.isMoving = 1;
+            cube.speed_x = -0.05;
+            cube.speed_y = 0.1;
+        }
+        break;
+    case 'w':
+        if (left.y <= 0)
+            break;
+        left.y -= 20.0;
+        break;
+    case 's':
+        if (left.y + left.h >= HEIGHT)
+            break;
+        left.y += 20.0;
+        break;
+    case 'i':
+        if (right.y <= 0)
+            break;
+        right.y -= 20.0;
+        break;
+    case 'k':
+        if (right.y + left.h >= HEIGHT)
+            break;
+        right.y += 20.0;
+        break;
     }
 
     glutPostRedisplay();
@@ -81,7 +104,6 @@ void myInit(void)
     // breadth of picture boundary is 1 pixel
     glPointSize(1.0);
 
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -91,7 +113,7 @@ void myInit(void)
 
 void update(struct Cube *cube)
 {
-    updateCube(cube, HEIGHT, WIDTH);                 // Update ball position
+    updateCube(cube, HEIGHT, WIDTH); // Update ball position
     // Call update again after 16 ms (approximately 60 fps)
 }
 
@@ -108,12 +130,12 @@ void display(void)
 
     drawBar(&right);
 
+    update(&cube);
 
     if (cube.x <= 0)
         make_point(&left, &right);
     else if (cube.x >= WIDTH)
         make_point(&right, &left);
-    update(&cube);   // Update the cube's position
     drawCube(&cube); // Draw the cube with the updated position
 
     // printf("Pontos direita: %i | Pontos esquerda: %i\n", right.points, left.points);
@@ -123,7 +145,6 @@ void display(void)
 
     char right_points[20];
     sprintf(right_points, "%d", right.points);
-
 
     drawText(WIDTH / 2 - 70, 50, right_points, 500);
     drawText(WIDTH / 2 + 95, 50, left_points, 500);
