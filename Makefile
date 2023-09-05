@@ -1,3 +1,3 @@
 all:
-	gcc pong.c Bar.c Cube.c -o myprogram.out -lGL -lGLU -lglut -lm -lglfw -lfreetype
-	./myprogram.out
+	gcc pong.c Pieces.c -o pong.out -lGL -lGLU -lglut -lm -lglfw -lfreetype
+	./pong.out

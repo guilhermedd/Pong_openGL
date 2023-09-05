@@ -5,8 +5,7 @@
 #include <GL/glut.h>
 #include <math.h>
 
-#include "Bar.h"
-#include "Cube.h"
+#include "Pieces.h"
 
 #define WIDTH 1200
 #define HEIGHT 800
@@ -14,16 +13,47 @@
 
 #define BAR_HEIGHT 300
 #define BAR_Y (HEIGHT / 2) - (BAR_HEIGHT / 2)
-#define BAR_SPEED 0
+#define BAR_SPEED 20
 #define BAR_WIDTH 15
 #define BAR_X 30
 
 struct Bar left = {BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, BAR_SPEED, 0, 0};
-struct Bar right = {WIDTH - BAR_X - BAR_WIDTH, BAR_Y, BAR_WIDTH, BAR_HEIGHT, BAR_SPEED, 0, 0};
+struct Bar right = {WIDTH - BAR_X - BAR_WIDTH, BAR_Y, BAR_WIDTH, BAR_HEIGHT, 0.05, 0, 0};
 struct Cube cube = {WIDTH / 2, HEIGHT / 2, 30, 0.0, 0.0, 0}; // x, y, size, speed_x, speed_y, isMoving
 
 void timerCallback(int value);
-void update(struct Cube *cube);
+void update(struct Cube *cube, struct Bar *left, struct Bar *right);
+
+void keyboardUp(unsigned char key, int x, int y)
+{
+    // Callback chamado quando uma tecla é liberada (key_released)
+    switch (key)
+    {
+    case GLUT_KEY_UP: // Tecla ESPAÇO
+        printf("LIBEROUUU\n");
+        break;
+        // Outras teclas podem ser tratadas aqui
+    }
+}
+
+void specialKeys(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_UP:
+        printf("CIMAAAA\n");
+        break;
+    case GLUT_KEY_DOWN:
+        // A seta para baixo foi pressionada
+        break;
+    case GLUT_KEY_LEFT:
+        // A seta para a esquerda foi pressionada
+        break;
+    case GLUT_KEY_RIGHT:
+        // A seta para a direita foi pressionada
+        break;
+    }
+}
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -50,22 +80,12 @@ void keyboard(unsigned char key, int x, int y)
     case 'w':
         if (left.y <= 0)
             break;
-        left.y -= 20.0;
+        up(&left, HEIGHT);
         break;
     case 's':
         if (left.y + left.h >= HEIGHT)
             break;
-        left.y += 20.0;
-        break;
-    case 'i':
-        if (right.y <= 0)
-            break;
-        right.y -= 20.0;
-        break;
-    case 'k':
-        if (right.y + left.h >= HEIGHT)
-            break;
-        right.y += 20.0;
+        down(&left, HEIGHT);
         break;
     }
 
@@ -74,7 +94,7 @@ void keyboard(unsigned char key, int x, int y)
 
 void timerCallback(int value)
 {
-    update(&cube);
+    update(&cube, &left, &right);
     glutPostRedisplay();
     glutTimerFunc(16, timerCallback, 0);
 }
@@ -111,9 +131,9 @@ void myInit(void)
     glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
 }
 
-void update(struct Cube *cube)
+void update(struct Cube *cube, struct Bar *left, struct Bar *right)
 {
-    updateCube(cube, HEIGHT, WIDTH); // Update ball position
+    updateCube(cube, HEIGHT, WIDTH, left, right); // Update ball position
     // Call update again after 16 ms (approximately 60 fps)
 }
 
@@ -130,13 +150,20 @@ void display(void)
 
     drawBar(&right);
 
-    update(&cube);
+    update(&cube, &left, &right);
 
     if (cube.x <= 0)
         make_point(&left, &right);
     else if (cube.x >= WIDTH)
         make_point(&right, &left);
     drawCube(&cube); // Draw the cube with the updated position
+
+    /////////////// "AI"
+    if (cube.y > right.y + right.h)
+        down(&right, HEIGHT);
+
+    if (cube.y < right.y)
+        up(&right, HEIGHT);
 
     // printf("Pontos direita: %i | Pontos esquerda: %i\n", right.points, left.points);
 
@@ -169,5 +196,7 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
+    glutKeyboardUpFunc(keyboardUp);
+    glutSpecialFunc(specialKeys);
     glutMainLoop();
 }
