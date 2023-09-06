@@ -145,9 +145,15 @@ void display(void)
     update(&cube, &left, &right);
 
     if (cube.x <= 0)
+    {
         make_point(&left, &right);
+        printf("Point\n");
+    }
     else if (cube.x >= WIDTH)
+    {
+        printf("Point\n");
         make_point(&right, &left);
+    }
     drawCube(&cube); // Draw the cube with the updated position
 
     /////////////// "AI"
