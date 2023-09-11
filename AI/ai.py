@@ -31,7 +31,3 @@ for linha in processo.stdout:
 
 # Aguarde o término do processo
 processo.wait()
-
-# Após o término, imprima a média final
-media_final = sum(valores) / len(valores)
-print("Média final:", media_final)
