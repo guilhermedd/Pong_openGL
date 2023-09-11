@@ -1,6 +1,15 @@
 // C program to demonstrate
 // drawing a circle using
 // OpenGL
+#include <GL/glut.h>
+#include <math.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <stdio.h>
+#endif
+
 #include "Pieces.h"
 
 #define WIDTH 1200

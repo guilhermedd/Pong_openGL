@@ -21,13 +21,13 @@ pyautogui.press('space')
 # Loop para ler a saída em tempo real
 for linha in processo.stdout:
     recent_value = linha.split(',')
-    print(recent_value)
-    if "Point" in recent_value:
+    # print(recent_value)
+    if 'Point' in recent_value[0]:
         print("Repetido")
         pyautogui.press('space')
-        continue
-    recent_value = [float(x) for x in recent_value]
-    print(recent_value)
+    else:
+        recent_value = [float(x) for x in recent_value]
+        print(recent_value)
 
 # Aguarde o término do processo
 processo.wait()
