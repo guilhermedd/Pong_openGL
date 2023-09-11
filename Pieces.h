@@ -1,4 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <unistd.h>
+#include <GL/glut.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#include <SOIL/SOIL.h>
 
 struct Bar
 {

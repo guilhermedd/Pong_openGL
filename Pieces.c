@@ -1,10 +1,8 @@
-#include <stdio.h>
-#include <GL/glut.h>
 #include "Pieces.h"
-#include <unistd.h>
 
 void drawCube(struct Cube *cube)
 {
+
     glBegin(GL_QUADS);
 
     glVertex2f(cube->x, cube->y);                           // top left
@@ -76,6 +74,6 @@ void down(struct Bar *this, float height)
 {
     if (!(this->y + this->h >= height))
     {
-            this->y += this->speed;
+        this->y += this->speed;
     }
 }
