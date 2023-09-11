@@ -1,9 +1,14 @@
 // C program to demonstrate
 // drawing a circle using
 // OpenGL
-#include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
+
+#ifdef _WIN32 
+#include <windows.h>
+#else
+#include <stdio.h>
+#endif
 
 #include "Pieces.h"
 
