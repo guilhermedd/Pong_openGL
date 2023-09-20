@@ -1,3 +1,9 @@
-*.out
+Game/*.out
 _MACOSX
 .vscode
+AI/teste.py
+AI/*.out
+AI/ai_venv
+AI/keras-rl
+.idea
+*.out
