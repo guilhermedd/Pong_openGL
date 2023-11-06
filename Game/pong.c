@@ -1,5 +1,3 @@
-// C program to demonstrate
-// drawing a circle using
 // OpenGL
 #include <GL/glut.h>
 #include <math.h>
@@ -16,7 +14,7 @@
 #define HEIGHT 800
 
 #define BAR_HEIGHT 300
-#define CUBE_SPEED 0.3
+#define CUBE_SPEED 0.1
 #define BAR_Y (HEIGHT / 2) - (BAR_HEIGHT / 2)
 #define BAR_SPEED 20
 #define BAR_WIDTH 15
@@ -25,13 +23,13 @@
 FILE *file;
 
 struct Bar left = {BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, BAR_SPEED, 0, 0};
-struct Bar right = {WIDTH - BAR_X - BAR_WIDTH, BAR_Y, BAR_WIDTH, BAR_HEIGHT, 0.6, 0, 0};
+struct Bar right = {WIDTH - BAR_X - BAR_WIDTH, BAR_Y, BAR_WIDTH, BAR_HEIGHT, 0.2, 0, 0};
 struct Cube cube = {WIDTH / 2, HEIGHT / 2, 30, 0.0, 0.0, 0}; // x, y, size, speed_x, speed_y, isMoving
-// int alternative = 1;
 int activeScreen = 0;
 
 void update(struct Cube *cube, struct Bar *left, struct Bar *right);
 
+// User arrow keys to move the bar
 void specialKeys(int key, int x, int y)
 {
     switch (key)
@@ -49,6 +47,7 @@ void specialKeys(int key, int x, int y)
     }
 }
 
+// Use keyboard to move and to start the game
 void keyboard(unsigned char key, int x, int y)
 {
     const float cameraSpeed = 0.1f;
@@ -86,6 +85,7 @@ void keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
+// function to draw text on screen.
 void drawText(float x, float y, const char *string, int size)
 {
     glColor3f(1.0, 1.0, 1.0);
@@ -98,6 +98,7 @@ void drawText(float x, float y, const char *string, int size)
     }
 }
 
+// myInit function for initializing values
 void myInit(void)
 {
     // making background color black as first
@@ -118,11 +119,30 @@ void myInit(void)
     glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
 }
 
+// function to display animation
 void update(struct Cube *cube, struct Bar *left, struct Bar *right)
 {
     updateCube(cube, HEIGHT, WIDTH, left, right); // Update ball position
 }
 
+// Write the highest points in scores.bin
+void writeScore(int playerScore, int botScore)
+{
+    FILE *arquivo;
+    arquivo = fopen("../Assets/scores.txt", "wb");
+
+    if (arquivo != NULL)
+    {
+        fprintf(arquivo, "%d - %d", playerScore, botScore);
+        fclose(arquivo);
+    }
+    else
+    {
+        printf("Não foi possível abrir o arquivo para escrita.\n");
+    }
+}
+
+// function to display animation
 void displayEasy(void)
 {
 
@@ -138,27 +158,19 @@ void displayEasy(void)
 
     update(&cube, &left, &right);
 
+    // The bot points
     if (cube.x <= 0)
     {
-        make_point(&left, &right);
-        printf("Point\n");
+        make_point(&right, &left);
+        writeScore(left.points, right.points);
     }
+
+    // We point
     else if (cube.x >= WIDTH)
     {
-        make_point(&right, &left);
-        printf("Point\n");
+        make_point(&left, &right);
+        writeScore(left.points, right.points);
     }
-    FILE *file = fopen("../Assets/scores.txt", "w"); // Abra o arquivo em modo de escrita, adicionando ao final
-
-    if (!file)
-    {
-        printf("Erro ao abrir o arquivo scores.txt\n");
-        return;
-    }
-
-    fprintf(file, "\n%i\t-\t%i", right.points, left.points);
-
-    fclose(file);
 
     drawCube(&cube); // Draw the cube with the updated position
 
@@ -169,29 +181,21 @@ void displayEasy(void)
     if (cube.y < right.y)
         up(&right, HEIGHT);
 
-    // printf("Pontos direita: %i | Pontos esquerda: %i\n", right.points, left.points);
-
     char left_points[20];
     sprintf(left_points, "%d", left.points);
 
     char right_points[20];
     sprintf(right_points, "%d", right.points);
 
-    //??????????????????????????? 👇
-
-    drawText(WIDTH / 2 - 70, 50, right_points, 500);
-    drawText(WIDTH / 2 + 95, 50, left_points, 500);
-
-    // MANO TA INVERTIDO ESSAS POHA 👆
-
-    // to use in AI
-    printf("%f, %f, %f, %f, %f\n", left.y, cube.x, cube.y, cube.speed_x, cube.speed_y); // bar.x, cube.x, cube.y, cube.speed_x, cube.speed_y
+    drawText(WIDTH / 2 - 70, 50, left_points, 500);
+    drawText(WIDTH / 2 + 95, 50, right_points, 500);
 
     glFlush();
     glutSwapBuffers();
     glutPostRedisplay();
 }
 
+// function to display animation
 void displayHard(void)
 {
 
@@ -212,11 +216,9 @@ void displayHard(void)
     if (cube.x <= 0)
     {
         make_point(&left, &right);
-        printf("Point\n");
     }
     else if (cube.x >= WIDTH)
     {
-        printf("Point\n");
         make_point(&right, &left);
     }
     drawCube(&cube); // Draw the cube with the updated position
@@ -247,6 +249,7 @@ void displayHard(void)
     glutPostRedisplay();
 }
 
+// function to start game
 void keyboardMenu(unsigned char key, int x, int y)
 {
     switch (key)
@@ -277,9 +280,11 @@ void keyboardMenu(unsigned char key, int x, int y)
     }
 }
 
+// function to read the scores.txt file
 char *lerArquivoScores()
 {
-    FILE *file = fopen("../Assets/scores.txt", "r");
+    FILE *file = fopen("../Assets/scores.txt", "rb");
+
     if (!file)
     {
         return NULL;
@@ -303,6 +308,7 @@ char *lerArquivoScores()
     return buffer;
 }
 
+// function to display menu
 void displayMenu()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -395,6 +401,7 @@ void displayMenu()
     glutSwapBuffers();
 }
 
+// Driver Program
 int main(int argc, char **argv)
 {
 

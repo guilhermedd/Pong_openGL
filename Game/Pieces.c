@@ -29,12 +29,8 @@ void updateCube(struct Cube *cube, float height, float width, struct Bar *left, 
     if ((cube->x <= left->x && cube->y >= left->y && cube->y <= left->y + left->h) || (cube->x + cube->size >= right->x && cube->y >= right->y && cube->y <= right->y + right->h))
     {
         cube->speed_x *= -1;
-        cube->speed_x += cube->speed_x > 0? 0.1 : -0.1;
+        cube->speed_x += cube->speed_x > 0 ? 0.1 : -0.1;
     }
-    // else if (cube->x + cube->size >= right->x && cube->y >= right->y && cube->y <= right->y + right->h)
-    // {
-    //     cube->speed_x *= -1;
-    // }
 }
 
 void reset(struct Cube *cube, float height, float width)
