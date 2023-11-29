@@ -14,7 +14,7 @@
 #define HEIGHT 800
 
 #define BAR_HEIGHT 300
-#define CUBE_SPEED 0.1
+#define CUBE_SPEED 0.5
 #define BAR_Y (HEIGHT / 2) - (BAR_HEIGHT / 2)
 #define BAR_SPEED 20
 #define BAR_WIDTH 15
@@ -104,7 +104,6 @@ void myInit(void)
     // making background color black as first
     // 3 arguments all are 0.0
     glClearColor(0.0, 0.0, 0.0, 1.0);
-
     glViewport(0, 0, WIDTH, HEIGHT);
 
     // making picture color green (in RGB mode), as middle argument is 1.0
@@ -240,9 +239,6 @@ void displayHard(void)
 
     drawText(WIDTH / 2 - 70, 50, right_points, 500);
     drawText(WIDTH / 2 + 95, 50, left_points, 500);
-
-    // to use in AI
-    printf("%f, %f, %f, %f, %f\n", left.y, cube.x, cube.y, cube.speed_x, cube.speed_y); // bar.x, cube.x, cube.y, cube.speed_x, cube.speed_y
 
     glFlush();
     glutSwapBuffers();
